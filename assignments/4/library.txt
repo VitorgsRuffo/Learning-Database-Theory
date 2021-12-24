@@ -1,0 +1,292 @@
+-- Nome: Vitor Gabriel da Silva Ruffo
+
+
+-- Definição (relax) do banco de dados da biblioteca.
+
+group:library
+
+book = {
+    book_id:number, title:string, publisher_name:string
+    1, 'The Lord of The Rings 1', 'publisher1'
+    2, 'The Lord of The Rings 2', 'publisher1'
+    3, 'Harry Potter 1', 'publisher2'
+    4, 'Harry Potter 2', 'publisher2'
+    5, 'Percy Jackson 1', 'publisher3'
+    6, 'Percy Jackson 2', 'publisher3'
+    7, 'Narnia 1', 'publisher4'
+    8, 'Narnia 2', 'publisher4'
+    9, 'Algorithms', 'publisher5'
+    10, 'The Lost Tribe', 'publisher5'
+}
+
+book_authors = {
+    book_id:number, author_name:string
+    1, 'Vitor Gabriel'
+    2, 'Vitor Gabriel'
+    3, 'J. K. Rowling'
+    4, 'J. K. Rowling'
+    5, 'Joao Coelho'
+    6, 'Joao Coelho'
+    7, 'James Patterson'
+    8, 'Neymar Jr.'
+    9, 'Lionel Messi'
+    9, 'James Patterson'
+    9, 'Keanu Reaves'
+    9, 'Mark Sullivan'
+    10, 'James Patterson'
+    10, 'Stephen King'
+    10, 'Mark Sullivan'
+}
+
+publisher = {
+    name:string, address:string, phone:string
+    'publisher1', 'Rua mesa, 901', '3110-3111'
+    'publisher2', 'Rua abacate, 501', '3210-3111'
+    'publisher3', 'Rua abobora, 111', '3140-3111'
+    'publisher4', 'Rua almerao, 951', '3510-3111'
+    'publisher5', 'Rua cebola, 201', '3140-3111'
+    'publisher6', 'Rua maca, 101', '3610-3111'
+}
+
+book_copies = {
+    book_id:number, branch_id:number, no_of_copies:number
+    1, 1, 4
+    2, 1, 4
+    3, 2, 2
+    4, 2, 2
+    1, 2, 2
+    2, 2, 2
+    5, 3, 3
+    6, 3, 2
+    7, 1, 3
+    8, 2, 3
+    9, 1, 5
+    10, 1, 1
+    10, 3, 3
+    10, 4, 6
+    1, 4, 2 
+    3, 4, 3
+    5, 4, 2
+    10, 5, 4
+    9, 5, 5
+}
+
+book_loans = {
+    book_id:number, branch_id:number, card_no:number, date_out:date, due_date:date
+    1, 1, 911, 2021-03-28, 2021-04-28
+    1, 1, 877, 2021-05-28, 2021-06-28
+    2, 1, 911, 2021-04-28, 2021-06-28
+    10, 4, 501, 2021-09-27, 2021-10-27
+    1, 4, 401, 2021-10-15, 2021-11-15
+    5, 4, 401, 2021-09-27, 2021-10-27
+    3, 4, 301, 2021-10-15, 2021-11-15
+    4, 2, 301, 2021-10-15, 2021-11-15
+    1, 1, 201, 2021-10-06, 2021-11-06
+    3, 2, 201, 2021-10-10, 2021-11-10
+    5, 3, 201, 2021-10-15, 2021-11-15
+    7, 1, 201, 2021-10-19, 2021-11-19
+    9, 1, 201, 2021-10-23, 2021-11-23
+    10, 4, 201, 2021-10-29, 2021-11-29
+    7, 1, 301, 2021-10-22, 2021-11-22
+}   
+
+library_branch = {
+    branch_id:number, branch_name:string, address:string
+    1, 'londrina branch', 'Rua dos alfeneiros, 4'
+    2, 'rolandia branch', 'Rua brasilia, 15'
+    3, 'maringa branch', 'Rua sao paulo, 100'
+    4, 'Sharpstown', 'Rua jose de alencar, 159'
+    5, 'Central', 'Rua luiz cabral, 531'
+}
+
+borrower = {
+    card_no:number, name:string, address:string, phone:string
+    911, 'Lionel Messi', 'Rua caderno, 643', '4110-6111'
+    877, 'Cristiano Ronaldo', 'Rua mesa, 901', '3110-3111'
+    101, 'Ronaldo Fenomeno', 'Rua goias, 1021', '3244-3111'
+    201, 'Ronaldinho Gaucho', 'Rua barnabe, 1121', '3266-3111'
+    301, 'Kylian Mbappe', 'Rua dos gauchos, 113', '3277-3111'
+    401, 'Kaka', 'Rua para, 177', '3299-3111'
+    501, 'Gabigol', 'Rua bahia, 188', '3277-3441'
+}
+
+
+-- Queries:
+
+
+-- RELATIONAL ALGEBRA:
+
+
+-- a. How many copies of the book titled ‘The Lost Tribe’ are owned by the library branch whose name is ‘Sharpstown’?
+
+sharp = (σ title = 'The Lost Tribe' (book)) ⨝ book_id = bid (ρ bid←book_id book_copies)
+sharp2 = (sharp) ⨝ branch_id = br_id (ρ br_id←branch_id library_branch)
+π no_of_copies (σ branch_name = 'Sharpstown' (sharp2))
+
+
+
+-- b. How many copies of the book titled ‘The Lost Tribe’ are owned by each library branch?
+
+cop = (σ title = 'The Lost Tribe' (book)) ⨝ book_id = bid (ρ bid←book_id book_copies)
+cop2 = (cop) ⨝ branch_id = br_id (ρ br_id←branch_id library_branch)
+π branch_name, no_of_copies (cop2)
+
+
+
+-- c. Retrieve the names of all borrowers who do not have any books checked out.
+
+borr = (borrower) ⟕ card_no = card_num (ρ card_num←card_no book_loans)
+borr2 = σ book_id = null (borr)
+π name (borr2)
+
+
+
+-- d. For each book that is loaned out from the ‘Sharpstown’ branch and whose Due_date is today, retrieve the book title, the borrower’s name, and the borrower’s address (considering "today" as "2021-10-27").
+
+loans = (σ branch_name = 'Sharpstown' (library_branch)) ⨝ branch_id = br_id (ρ br_id←branch_id book_loans)
+loans2 = (σ due_date = date('2021-10-27') (loans)) ⨝ book_id	= bid (ρ bid←book_id book)
+loans3 = (loans2) ⨝ card_no = card_num (ρ card_num←card_no, baddress←address borrower)
+π title, name, baddress (loans3)
+
+
+
+-- e. For each library branch, retrieve the branch name and the total number of books loaned out from that branch.
+
+lib = (library_branch) ⨝ branch_id = br_id (ρ br_id←branch_id book_loans)
+γ branch_name; count(*)→loaned_books (lib)
+
+
+
+-- f. Retrieve the names, addresses, and number of books checked out for all borrowers who have more than five books checked out.
+
+borr = (borrower) ⨝ card_no = card_num (ρ card_num←card_no book_loans)
+σ checked_out_books > 5 (γ name, address; count(*)→checked_out_books (borr))
+
+
+
+
+-- g. For each book authored (or coauthored) by ‘Stephen King’, retrieve the title and the number of copies owned by the library branch whose name is ‘Central’.
+
+books = (σ author_name = 'Stephen King' (book_authors)) ⨝ book_id = bid (ρ bid←book_id book)
+books2 = (books) ⨝ book_id = bo_id (ρ bo_id←book_id book_copies)
+books3 = (books2) ⨝ branch_id = br_id (ρ br_id←branch_id library_branch)
+π title, no_of_copies (σ branch_name = 'Central' (books3))
+
+
+
+-- h. Retrieve the title of the books that were co-authored by ‘James Patterson’ and ‘Mark Sullivan’and the name of the library branches that have copies of each of these books and the number of copies the branch has.
+
+jm = σ author_name = 'James Patterson' OR author_name = 'Mark Sullivan' (book_authors)
+jm2 = (jm) ⨝ book_id = bid (ρ bid←book_id, aname←author_name jm)
+jm3 = π book_id (σ author_name != aname (jm2))
+jm4 = (jm3) ⨝ book_id = bid (ρ bid←book_id book)
+jm5 = (jm4) ⨝ book_id = bo_id (ρ bo_id←book_id book_copies)
+π title, branch_name, no_of_copies ((jm5) ⨝ branch_id = br_id (ρ br_id←branch_id library_branch))
+
+
+
+-- i. Retrieve the card number, name and phone of the borrowers who have already loaned all the books authored by ‘J. K. Rowling’.
+
+jk = π book_id ((σ author_name = 'J. K. Rowling' (book_authors)) ⨝ book_id = bid (ρ bid←book_id book))
+jk2 =  π book_id, card_no (book_loans)
+jk3 = jk2 / jk
+π card_no, name, phone ((jk3) ⨝ card_no = cno (ρ cno←card_no borrower)) 
+ 
+
+
+
+
+-- SQL:
+
+-- a. How many copies of the book titled ‘The Lost Tribe’ are owned by the library branch whose name is ‘Sharpstown’?
+
+SELECT bc.no_of_copies AS copies_in_sharpstown
+FROM (book AS b JOIN book_copies AS bc ON b.book_id=bc.book_id)
+			JOIN library_branch AS lb ON bc.branch_id=lb.branch_id
+WHERE b.title = 'The Lost Tribe' AND lb.branch_name = 'Sharpstown'
+
+
+
+-- b. How many copies of the book titled ‘The Lost Tribe’ are owned by each library branch?
+
+SELECT lb.branch_name, bc.no_of_copies 
+FROM (book AS b JOIN book_copies AS bc ON b.book_id=bc.book_id)
+			JOIN library_branch AS lb ON bc.branch_id=lb.branch_id
+WHERE b.title = 'The Lost Tribe'
+
+
+
+-- c. Retrieve the names of all borrowers who do not have any books checked out.
+SELECT br.name
+FROM borrower AS br LEFT JOIN book_loans AS bl
+	   ON br.card_no=bl.card_no
+WHERE bl.book_id=null
+
+
+
+-- d. For each book that is loaned out from the ‘Sharpstown’ branch and whose Due_date is today, retrieve the book title, the borrower’s name, and the borrower’s address (considering "today" as "2021-10-27").
+
+SELECT b.title, br.name, br.address
+FROM ((library_branch AS lb JOIN book_loans AS bl 
+		   ON lb.branch_id=bl.branch_id) 
+			JOIN book AS b ON bl.book_id=b.book_id)
+		 JOIN borrower AS br ON bl.card_no=br.card_no
+WHERE lb.branch_name='Sharpstown' AND bl.due_date=DATE('2021-10-27');
+
+
+
+-- e. For each library branch, retrieve the branch name and the total number of books loaned out from that branch.
+
+SELECT lb.branch_name, COUNT(*) AS total_loaned_books
+FROM library_branch AS lb JOIN book_loans AS bl 
+		 ON lb.branch_id=bl.branch_id
+GROUP BY lb.branch_name
+
+
+
+-- f. Retrieve the names, addresses, and number of books checked out for all borrowers who have more than five books checked out.
+
+SELECT br.name, br.address, COUNT(*) AS no_of_books_checked_out
+FROM borrower AS br JOIN book_loans AS bl 
+	   ON br.card_no=bl.card_no 
+GROUP BY br.card_no, br.name, br.address
+HAVING no_of_books_checked_out > 5
+
+
+
+-- g. For each book authored (or coauthored) by ‘Stephen King’, retrieve the title and the number of copies owned by the library branch whose name is ‘Central’.
+
+SELECT b.title, bc.no_of_copies
+FROM ((book_authors AS ba JOIN book AS b ON ba.book_id=b.book_id)
+		   JOIN book_copies AS bc ON b.book_id=bc.book_id)
+			JOIN library_branch as lb ON bc.branch_id=lb.branch_id
+WHERE ba.author_name='Stephen King' AND lb.branch_name='Central'
+
+
+
+-- h. Retrieve the title of the books that were co-authored by ‘James Patterson’ and ‘Mark Sullivan’ and the name of the library branches that have copies of each of these books and the number of copies the branch has.
+
+
+SELECT b.title, lb.branch_name, bc.no_of_copies
+FROM (book AS b JOIN book_copies AS bc ON b.book_id=bc.book_id)
+		  JOIN library_branch AS lb ON bc.branch_id=lb.branch_id
+WHERE b.book_id IN (
+		SELECT ba1.book_id
+		FROM book_authors AS ba1 JOIN book_authors AS ba2 
+				 ON ba1.book_id=ba2.book_id 
+		WHERE (ba1.author_name = 'James Patterson' OR ba1.author_name = 		'Mark Sullivan') AND (ba2.author_name = 'James Patterson' OR 				ba2.author_name = 'Mark Sullivan') AND ba1.author_name <> 					ba2.author_name)
+
+
+
+-- i. Retrieve the card number, name and phone of the borrowers who have already loaned all the books authored by ‘J. K. Rowling’.
+
+SELECT br.card_no, br.name, br.phone
+FROM borrower AS br
+WHERE NOT EXISTS (
+	(SELECT ba.book_id FROM book_authors AS ba 
+	 WHERE ba.author_name = 'J. K. Rowling')
+	EXCEPT
+	(SELECT bl.book_id FROM book_loans AS bl
+	 WHERE bl.card_no=br.card_no)
+)
+

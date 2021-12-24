@@ -1,0 +1,8 @@
+Tarefa 3: Mapeamento ER->Relacional e implementação usando SQL-DDL.
+Objetivo: Gerar esquemas relacionais de bancos de dados usando o processo de mapeamento ER->Relacional e implementar os esquemas relacionais em SQL, incluindo todas as restrições necessárias. Sugestão de SGBD a usar: PostgreSQL.
+
+Diagramas a considerar:
+
+Diagrama EER do ex-universidade-DER.jpg anexado a esta tarefa. Para este exercício, todos devem usar o mesmo diagrama, então é possível ter mapeamentos e implementações parecidas.
+
+Diagrama que cada um fez para o exercício 4.19 (Georgia Tech Library), indicado no arquivo exercicios-MER.pdf. Neste caso, cada um deve mapear e implementar os seu próprio diagrama, submetido na Tarefa 2. Assumo que a probabilidade de ter diagramas iguais ou muito parecidos é bem pequena, então considero que os mapeamentos e implementações de cada um de vocês também sejam diferentes.

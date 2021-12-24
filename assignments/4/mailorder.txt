@@ -1,0 +1,209 @@
+-- Nome: Vitor Gabriel da Silva Ruffo
+
+
+-- Definição (relax) do banco de dados mail order.
+
+group:mailorder_company
+
+parts = {
+    pno:number, pname:string, price:number
+    1, 'Aa', 10.50
+    2, 'Bb', 20.50
+    3, 'Cc', 8.50
+    4, 'Dd', 30.50
+    5, 'Ee', 5.50
+    6, 'Ff', 2.50
+    7, 'Gg', 15.50
+    8, 'Hh', 50.50
+    9, 'Ii', 100.50
+    10, 'Jj', 500.50
+    11, 'Kk', 150.50
+}
+
+customers = {
+    id:number, name:string, street:string, zip:number, phone:string
+    1, 'Vitor Gabriel', 'Rua abobora, 764', 868686, '3333-5555'
+    2, 'Daniel Kaster', 'Rua abacaxi, 123', 858585, '1111-5555'
+    3, 'Joao Coelho', 'Rua melancia, 321', 868686, '1112-5355'
+    4, 'Harry Potter', 'Rua dos alfeneiros, 4', 818181, '1010-5511'
+    5, 'Percy Jackson', 'Rua abacate, 111', 868686, '1110-1111'
+    6, 'Severo Snape', 'Rua mau-humor, 777', 808080, '2220-1111'
+    7, 'Hermione Granger', 'Rua alicate, 121', 828282, '6110-8111'
+    8, 'Neymar Jr.', 'Rua violao, 542', 838383, '5110-9111'
+    9, 'Lionel Messi', 'Rua caderno, 643', 828282, '4110-6111'
+    10, 'Cristiano Ronaldo', 'Rua mesa, 901', 818181, '3110-3111'
+}
+
+employees = {
+    eno:number, name:string, zip:number, hire_date:date
+    101, 'Ronaldo Fenomeno', 868686, 2021-03-28
+    201, 'Ronaldinho Gaucho', 868686, 2020-04-29
+    301, 'Kylian Mbappe', 858585, 2019-05-30
+    401, 'Kaka', 808080, 2020-06-30
+    501, 'Gabigol', 818181, 2020-04-11
+}
+
+zip_codes = {
+    zip:number, city:string
+    868686, 'Londrina'
+    858585, 'Maringa'
+    848484, 'Rolandia'
+    838383, 'Cambe'
+    828282, 'Prado Ferreira'
+    818181, 'Wichita'
+    808080, 'Wichita'
+}
+
+orders = {
+    num:number, customer_id:number, eno:number, date_received:date, date_shipped:date
+    1, 1, 101, 2020-02-11, 2020-02-01
+    2, 1, 201, 2020-05-11, 2020-04-25
+    3, 2, 301, 2020-07-11, 2020-06-20
+    4, 2, 401, 2021-01-11, 2020-12-15
+    5, 3, 501, 2021-04-11, 2021-03-10
+    6, 3, 201, 2021-04-15, 2021-03-14
+}
+
+order_details = {
+    onum:number, pno:number, quantity
+    1, 1, 2
+    1, 3, 4
+    1, 5, 3
+    2, 10, 5
+    3, 3, 10
+    4, 1, 5
+    4, 4, 1
+    5, 8, 12
+    6, 10, 5
+    6, 11, 4
+    6, 9, 1
+}
+   
+
+
+-- Queries:
+
+-- RELATIONAL ALGEBRA:
+
+
+-- g. Retrieve the id, name and total amount spent in orders for all customers, given that the total cost of each order is the quantity multiplied by the price for every part in the order. Sort the result in descending order of total spent.
+
+cood = ((customers) ⨝ id = customer_id (orders)) ⨝ num = onum (ρ pnum←pno order_details)
+cood2 = (cood) ⨝ pnum = pno (parts)
+cood3 = π id, name, (quantity*price)→part_cost (cood2)
+cood4 = γ id, name; sum(part_cost)→order_cost (cood3)
+τ order_cost (cood4)
+
+
+
+-- f. Retrieve the names of customers who have not placed an order.
+π name (σ num = null ((customers) ⟕ id = customer_id (orders)))
+
+
+
+-- e. Retrieve the names of customers who have ordered parts costing less than $20.00.
+
+cop = π name, pnum (((customers) ⨝ id = customer_id (orders)) ⨝ num = onum (ρ pnum←pno order_details))
+π name (σ price < 20.00 ((cop) ⨝ pnum = pno (parts)))
+
+
+
+-- d. Retrieve the names of customers who have ordered parts from employees living in the city ‘Wichita’.
+
+coe = π name, ezip (((customers) ⨝ id = customer_id (orders)) ⨝ eno = enum (ρ enum←eno, ezip←zip, ename←name employees))
+π name (σ city = 'Wichita' ((coe) ⨝ ezip = zip (zip_codes)))
+
+
+
+-- c. Retrieve the pairs of customer number values of customers who live in the same ZIP Code.
+
+σ id != cid (π id, cid ((customers) ⨝ zip = czip (ρ cid←id, cname←name, cstreet←street, cphone←phone, czip←zip customers)))
+
+
+
+-- b. Retrieve the names and cities of employees who have taken orders for parts costing more than $50.00.
+
+R1 = ((employees) ⨝ eno = enum (ρ enum←eno orders)) ⨝  num = onum (order_details)
+R2 = (R1) ⨝ pno = pnum (ρ pnum←pno parts)
+R3 = π name, ezip←zip (σ price > 50 (R2))
+π name, city ((R3) ⨝ ezip = zip (zip_codes))
+
+
+
+-- a. Retrieve the names of parts that cost less than $20.00.
+π pname (σ price < 20.00 (parts))
+
+
+
+
+
+-- SQL:
+
+
+-- g. Retrieve the id, name and total amount spent in orders for all customers, given that the total cost of each order is the quantity multiplied by the price for every part in the order. Sort the result in descending order of total spent.
+
+SELECT oc.id, oc.name, SUM(oc.order_cost) AS total_spent
+FROM (
+				SELECT c.id, c.name, od.quantity*p.price AS order_cost
+				FROM ((customers AS c JOIN orders AS o ON c.id=o.customer_id)
+							 JOIN order_details AS od ON o.num = od.onum)
+						 JOIN parts AS p ON od.pno=p.pno
+) AS oc
+GROUP BY oc.id, oc.name
+ORDER BY total_spent
+
+
+
+-- f. Retrieve the names of customers who have not placed an order.
+
+SELECT c.name
+FROM customers AS c LEFT JOIN orders AS o ON c.id=o.customer_id
+WHERE o.num=null
+
+
+
+-- e. Retrieve the names of customers who have ordered parts costing less than $20.00.
+
+SELECT DISTINCT c.name
+FROM ((customers AS c JOIN orders AS o ON c.id=o.customer_id)
+		   JOIN order_details AS od ON o.num = od.onum)
+		 JOIN parts AS p ON od.pno=p.pno
+WHERE p.price < 20.00
+
+
+
+-- d. Retrieve the names of customers who have ordered parts from employees living in the city ‘Wichita’.
+
+SELECT c.name
+FROM ((customers AS c JOIN orders AS o ON c.id=o.customer_id)
+		   JOIN employees AS e ON o.eno=e.eno)
+		 JOIN zip_codes AS z ON e.zip=z.zip
+WHERE z.city = 'Wichita'
+
+
+
+-- c. Retrieve the pairs of customer number values of customers who live in the same ZIP Code.
+
+SELECT c1.id, c2.id 
+FROM customers AS c1 JOIN customers AS c2 ON c1.zip=c2.zip
+WHERE c1.id <> c2.id 
+
+
+
+-- b. Retrieve the names and cities of employees who have taken orders for parts costing more than $50.00.
+
+SELECT e.name, z.city 
+FROM ((employees AS e JOIN zip_codes AS z ON e.zip=z.zip) 
+			JOIN 
+		  (orders AS o JOIN order_details AS od ON o.num=od.onum) 
+			ON e.eno=o.eno) 
+		 JOIN 
+		 parts AS p ON od.pno=p.pno
+WHERE p.price > 50.00
+
+
+
+-- a. Retrieve the names of parts that cost less than $20.00.
+
+SELECT pname FROM parts WHERE price < 20.00
+

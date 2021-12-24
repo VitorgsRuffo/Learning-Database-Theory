@@ -1,0 +1,2 @@
+Tarefa 1: Diagrama ER de um campeonato esportivo.
+Objetivo: Definir uma especificação de um banco de dados de um campeonato esportivo e fazer um diagrama E-R que modele o problema.
