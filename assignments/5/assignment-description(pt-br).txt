@@ -1,0 +1,11 @@
+Existem inúmeros recursos online de ótima qualidade para o aprendizado de bancos de dados e SQL, incluindo cursos completos. Dentre esses recursos, esta tarefa consiste em duas atividades:
+
+seguir os 5 mini-capítulos de um tutorial simples de SQL (https://selectstarsql.com/), mas que revisa uma série de detalhes vistos em aula; e
+resolver uma atividade lúdica usando SQL (https://mystery.knightlab.com/).
+Durante a execução dos comandos das duas atividades, salve as todas as instruções que executou, em sequência, em um arquivo texto (.sql). Indique, antes de cada consulta, a descrição da consulta (o que a consulta busca responder, em texto livre).
+
+Este arquivo não deve ser filtrado, mas deve conter *todas* as consultas executadas, como um log de execução. Isto é, se você definiu uma consulta e teve que executar 3 tentativas para, só na última, alcançar o resultado esperado, as 3 devem estar no arquivo, em sequência, incluindo as 2 anteriores, com erro ou incompletas. Os "erros" ou as consultas que não ajudaram na solução dos problemas propostos não impactarão negativamente na nota. Pelo contrário, são importantíssimos para mostrar a sua sequência de raciocínio durante o desenvolvimento da tarefa e, portanto, precisam ser incluídos. Para cada consulta, entenderei que a última consulta apresentada é a considerada correta por você.
+
+Procure usar o mínimo possível de consultas SQL para resolver o SQL Muder Mistery. Isto exigirá pensar nas consultas e produzir consultas mais elaboradas. Note que é possível resolver os problemas com vários "SELECT * FROM tabela" simples, seguidos de uma análise "manual", percorrendo a relação resultante para achar o que você precisa e juntar na cabeça as informações. Embora isso "funcione", o objetivo principal é definir condições de seleção e operações relacionais adequadas, que juntem os dados relevantes de relações diferentes, filtrem com as condições certas e sumarizem os dados para responder mais diretamente ao que a consulta busca.
+
+Bom trabalho!
